@@ -1,0 +1,7 @@
+echo "Running checks before push..."
+
+npm run lint
+npm run test
+npm run format:check
+
+echo "All checks passed. Pushing..."
