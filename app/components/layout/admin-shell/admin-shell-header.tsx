@@ -9,12 +9,8 @@ export function AdminShellHeader() {
   return (
     <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border/80 bg-background pl-12 pr-3 sm:gap-3 md:gap-4 md:px-6 md:pl-6">
       <div className="hidden min-w-0 md:block md:max-w-[200px] lg:max-w-[240px]">
-        <h1 className="truncate text-base font-semibold leading-tight tracking-tight">
-          Dashboard
-        </h1>
-        <p className="truncate text-[11px] text-muted-foreground">
-          Store overview
-        </p>
+        <h1 className="truncate text-base font-semibold leading-tight tracking-tight">Dashboard</h1>
+        <p className="truncate text-[11px] text-muted-foreground">Store overview</p>
       </div>
 
       <div className="flex min-w-0 flex-1 justify-center px-1 sm:px-3">

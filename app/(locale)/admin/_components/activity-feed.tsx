@@ -43,16 +43,12 @@ export function ActivityFeed() {
           >
             <span
               className={
-                row.tone === "muted"
-                  ? "text-muted-foreground"
-                  : "font-medium text-foreground"
+                row.tone === "muted" ? "text-muted-foreground" : "font-medium text-foreground"
               }
             >
               {row.title}
             </span>
-            <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-              {row.time}
-            </span>
+            <span className="shrink-0 text-xs text-muted-foreground tabular-nums">{row.time}</span>
           </li>
         ))}
       </ul>

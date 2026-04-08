@@ -27,12 +27,8 @@ export function AdminShellSidebar({
           <AvatarFallback>CH</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex flex-col">
-          <span className="truncate text-sm font-medium leading-none">
-            Chungchheng Admin
-          </span>
-          <span className="truncate text-xs text-muted-foreground">
-            chheng@vtenh.com
-          </span>
+          <span className="truncate text-sm font-medium leading-none">Chungchheng Admin</span>
+          <span className="truncate text-xs text-muted-foreground">chheng@vtenh.com</span>
         </div>
       </div>
     </div>

@@ -160,6 +160,6 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Google Sans', var(--font-sans);
+    font-family: "Google Sans", var(--font-sans);
   }
 }

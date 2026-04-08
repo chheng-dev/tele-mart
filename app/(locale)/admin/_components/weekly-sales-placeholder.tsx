@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
 
 const DAYS = [
@@ -34,10 +28,7 @@ export function WeeklySalesPlaceholder() {
       <CardContent className="px-5 pb-5 pt-4">
         <div className="flex h-36 items-end justify-between gap-2">
           {DAYS.map((d) => (
-            <div
-              key={d.label}
-              className="flex flex-1 flex-col items-center gap-2"
-            >
+            <div key={d.label} className="flex flex-1 flex-col items-center gap-2">
               <div className="flex h-28 w-full items-end justify-center">
                 <div
                   className={
@@ -48,9 +39,7 @@ export function WeeklySalesPlaceholder() {
                   style={{ height: `${d.h}%` }}
                 />
               </div>
-              <span className="text-[10px] font-medium text-muted-foreground">
-                {d.label}
-              </span>
+              <span className="text-[10px] font-medium text-muted-foreground">{d.label}</span>
             </div>
           ))}
         </div>

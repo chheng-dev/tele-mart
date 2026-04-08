@@ -13,8 +13,8 @@ export function DashboardPageHeader() {
         </p>
       </div>
       <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-        Revenue, orders, and operations at a glance. Replace placeholders with
-        live queries when your analytics layer is connected.
+        Revenue, orders, and operations at a glance. Replace placeholders with live queries when
+        your analytics layer is connected.
       </p>
     </header>
   );
