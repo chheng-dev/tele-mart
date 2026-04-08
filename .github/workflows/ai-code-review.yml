@@ -1,0 +1,30 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  ai_code_review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: AI Code Review
+        uses: AleksandrFurmenkovOfficial/ai-code-review@v1.0
+        with:
+          token: ${{ github.token }}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          pr_number: ${{ github.event.number }}
+
+          ai_provider: openai
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          openai_model: gpt-5.2
+
+          include_extensions: .ts,.tsx,.js,.jsx,.py
+          exclude_extensions: .test.js,.test.ts,.test.tsx
+          include_paths: app/,components/,lib/,db/
+          exclude_paths: test/,docs/
+          fail_action_if_review_failed: "true"
