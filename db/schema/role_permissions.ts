@@ -1,9 +1,4 @@
-import {
-  integer,
-  pgTable,
-  primaryKey,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { integer, pgTable, primaryKey, timestamp } from "drizzle-orm/pg-core";
 import { permissions } from "./permissions";
 import { roles } from "./roles";
 
@@ -20,7 +15,7 @@ export const rolePermissions = pgTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.roleId, table.permissionId] }),
-  })
+  }),
 );
 
 export type InsertRolePermission = typeof rolePermissions.$inferInsert;

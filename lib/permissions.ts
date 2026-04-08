@@ -30,7 +30,7 @@ export async function requestPermission(resource: string, action: string) {
         eq(staffUserRoles.staffUserId, staffRow.id),
         eq(permissions.resource, resource),
         eq(permissions.action, action),
-      )
+      ),
     )
     .limit(1);
 

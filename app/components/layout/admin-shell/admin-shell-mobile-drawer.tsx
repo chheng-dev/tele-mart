@@ -17,11 +17,7 @@ export function AdminShellMobileDrawer({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="fixed left-2 top-2 z-40 md:hidden"
-        >
+        <Button variant="ghost" size="icon" className="fixed left-2 top-2 z-40 md:hidden">
           <PanelLeft className="h-5 w-5" />
         </Button>
       </SheetTrigger>

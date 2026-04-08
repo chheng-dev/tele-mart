@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 
 export function BestSellingProductsPlaceholder() {
@@ -26,9 +20,7 @@ export function BestSellingProductsPlaceholder() {
         <div className="flex items-start gap-2">
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <div>
-            <CardTitle className="text-base text-foreground">
-              Best selling products
-            </CardTitle>
+            <CardTitle className="text-base text-foreground">Best selling products</CardTitle>
             <CardDescription>Top SKUs by revenue (placeholder)</CardDescription>
           </div>
         </div>
@@ -36,19 +28,14 @@ export function BestSellingProductsPlaceholder() {
       <CardContent className="relative space-y-3 px-5 pb-5 pt-4">
         <div className="flex gap-2">
           {[36, 58, 32, 72, 44].map((px, i) => (
-            <div
-              key={i}
-              className="flex min-w-0 flex-1 flex-col items-center gap-1.5"
-            >
+            <div key={i} className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
               <div className="flex h-20 w-full items-end justify-center">
                 <div
                   className="w-[70%] rounded-t-md bg-primary/80 dark:bg-primary/70"
                   style={{ height: `${px}px` }}
                 />
               </div>
-              <span className="text-[10px] font-medium text-muted-foreground">
-                P{i + 1}
-              </span>
+              <span className="text-[10px] font-medium text-muted-foreground">P{i + 1}</span>
             </div>
           ))}
         </div>

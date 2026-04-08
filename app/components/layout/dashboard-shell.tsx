@@ -23,10 +23,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
       </aside>
 
       <AdminShellMobileDrawer open={mobileOpen} onOpenChange={setMobileOpen}>
-        <AdminShellSidebar
-          pathname={pathname}
-          onNavigate={() => setMobileOpen(false)}
-        />
+        <AdminShellSidebar pathname={pathname} onNavigate={() => setMobileOpen(false)} />
       </AdminShellMobileDrawer>
 
       <div className="flex min-w-0 flex-1 flex-col">

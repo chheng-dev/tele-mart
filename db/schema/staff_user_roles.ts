@@ -1,9 +1,4 @@
-import {
-  integer,
-  pgTable,
-  primaryKey,
-  timestamp,
-} from "drizzle-orm/pg-core";
+import { integer, pgTable, primaryKey, timestamp } from "drizzle-orm/pg-core";
 import { roles } from "./roles";
 import { staffUsers } from "./staff_users";
 
@@ -20,7 +15,7 @@ export const staffUserRoles = pgTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.staffUserId, table.roleId] }),
-  })
+  }),
 );
 
 export type InsertStaffUserRole = typeof staffUserRoles.$inferInsert;

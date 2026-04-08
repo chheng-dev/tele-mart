@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingDown, TrendingUp } from "lucide-react";
 
 /** Static SVG placeholder — swap for a real chart when you add a chart library. */
@@ -37,11 +31,7 @@ export function SalesReportPlaceholder() {
       </CardHeader>
       <CardContent className="px-5 pb-5 pt-4">
         <div className="aspect-16/7 w-full overflow-hidden rounded-lg border bg-muted/20">
-          <svg
-            viewBox="0 0 400 140"
-            className="h-full w-full text-primary/80"
-            aria-hidden
-          >
+          <svg viewBox="0 0 400 140" className="h-full w-full text-primary/80" aria-hidden>
             <defs>
               <linearGradient id="salesFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="currentColor" stopOpacity="0.25" />
