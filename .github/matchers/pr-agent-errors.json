@@ -1,0 +1,13 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "pr-agent-errors",
+      "pattern": [
+        {
+          "regexp": "^((?:ERROR:.+)|(?:.+\\|\\s+ERROR\\s+\\|.+))$",
+          "message": 1
+        }
+      ]
+    }
+  ]
+}

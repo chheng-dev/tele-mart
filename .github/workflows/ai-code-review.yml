@@ -1,30 +1,47 @@
-name: AI Code Review
-
+name: PR Agent (Gemini)
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
-
+    types: [opened, reopened, ready_for_review, synchronize]
+  issue_comment:
 jobs:
-  ai_code_review:
+  pr_agent_job:
+    if: ${{ github.event.sender.type != 'Bot' }}
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      issues: write
       pull-requests: write
+      contents: write
     steps:
-      - name: AI Code Review
-        uses: AleksandrFurmenkovOfficial/ai-code-review@v1.0
-        with:
-          token: ${{ github.token }}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          pr_number: ${{ github.event.number }}
+      # Repo must be checked out before ::add-matcher::; otherwise .github/matchers/ is not on the runner.
+      - uses: actions/checkout@v4
 
-          ai_provider: openai
-          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          openai_model: gpt-5.2
+      # Matcher highlights ERROR lines in logs; GitHub caps annotations per step/run, and many PR Agent errors are not tied to a file path.
+      - name: Register PR Agent log problem matcher
+        run: echo "::add-matcher::${{ github.workspace }}/.github/matchers/pr-agent-errors.json"
 
-          include_extensions: .ts,.tsx,.js,.jsx,.py
-          exclude_extensions: .test.js,.test.ts,.test.tsx
-          include_paths: app/,components/,lib/,db/
-          exclude_paths: test/,docs/
-          fail_action_if_review_failed: "true"
+      - name: PR Agent (review / describe / improve)
+        id: pr_agent
+        uses: qodo-ai/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          config.model: "gemini/gemini-2.5-flash"
+          config.fallback_models: '["gemini/gemini-2.5-flash"]'
+          config.verbosity_level: "2"
+          GOOGLE_AI_STUDIO.GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          config.response_language: "en-US"
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "true"
+          github_action_config.auto_improve: "true"
+          github_action_config.pr_actions: '["opened","reopened","ready_for_review","synchronize"]'
+
+      - name: Remove PR Agent log problem matcher
+        if: always()
+        run: echo "::remove-matcher owner=pr-agent-errors::"
+
+      - name: Report PR Agent failure
+        if: failure()
+        run: |
+          echo "::error::PR Agent step failed. Scroll up in this job for ERROR lines, or check API key / model / permissions (see Qodo troubleshooting)."
+          echo "## PR Agent failed" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Confirm \`GEMINI_API_KEY\` secret and model id \`gemini/gemini-2.5-flash\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Confirm workflow \`permissions\` match Qodo docs" >> "$GITHUB_STEP_SUMMARY"

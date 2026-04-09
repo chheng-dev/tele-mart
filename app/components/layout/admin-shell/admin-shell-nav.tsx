@@ -1,32 +1,76 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, MessageSquare, Settings, Users } from "lucide-react";
+import {
+  BarChart3,
+  ChevronRight,
+  ClipboardCheck,
+  ClipboardList,
+  CreditCard,
+  FileText,
+  Languages,
+  LayoutTemplate,
+  LayoutPanelTop,
+  Notebook,
+  Table2,
+  Ticket,
+  UserCircle,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AdminNavGroup, AdminNavItem } from "./types";
 
 const navIconMap = {
-  dashboard: LayoutDashboard,
-  users: Users,
-  settings: Settings,
-  message: MessageSquare,
+  barChart: BarChart3,
+  clipboard: ClipboardList,
+  table: Table2,
+  fileText: FileText,
+  userCircle: UserCircle,
+  notebook: Notebook,
+  ticket: Ticket,
+  languages: Languages,
+  clipboardCheck: ClipboardCheck,
+  layoutTemplate: LayoutTemplate,
+  creditCard: CreditCard,
+  panelTop: LayoutPanelTop,
 } as const;
 
 export const adminNavGroups: AdminNavGroup[] = [
   {
     title: "Dashboards",
-    items: [{ label: "CRM Dashboard", href: "/admin", icon: "dashboard" }],
+    items: [
+      { label: "Analytics", href: "#", icon: "barChart" },
+      { label: "CRM Dashboard", href: "/admin", icon: "clipboard" },
+    ],
   },
   {
     title: "Pages",
     items: [
-      { label: "Users", href: "/admin/users", icon: "users" },
-      { label: "Settings", href: "/admin/settings", icon: "settings" },
+      { label: "Tables", href: "#", icon: "table" },
+      { label: "Forms", href: "#", icon: "fileText" },
+      { label: "User Profile", href: "/admin/users", icon: "userCircle" },
     ],
   },
   {
     title: "Apps",
-    items: [{ label: "Inbox (soon)", href: "#", icon: "message" }],
+    items: [
+      { label: "Notes", href: "#", icon: "notebook" },
+      { label: "Tickets", href: "#", icon: "ticket" },
+      { label: "Blogs", href: "#", icon: "languages", hasSubmenu: true },
+    ],
+  },
+  {
+    title: "Form Elements",
+    items: [
+      { label: "Shadcn Forms", href: "#", icon: "clipboardCheck", hasSubmenu: true },
+      { label: "Form layouts", href: "#", icon: "layoutTemplate", hasSubmenu: true },
+    ],
+  },
+  {
+    title: "Widgets",
+    items: [
+      { label: "Cards", href: "#", icon: "creditCard", hasSubmenu: true },
+      { label: "Banners", href: "#", icon: "panelTop", hasSubmenu: true },
+    ],
   },
 ];
 
@@ -54,7 +98,7 @@ export function AdminShellNav({
           <nav className="flex flex-col gap-0.5">
             {group.items.map((item) => (
               <AdminShellNavLink
-                key={item.href + item.label}
+                key={`${group.title}-${item.label}`}
                 item={item}
                 active={isNavActive(pathname, item.href)}
                 onNavigate={onNavigate}
@@ -77,12 +121,32 @@ function AdminShellNavLink({
   onNavigate?: () => void;
 }) {
   const Icon = navIconMap[item.icon];
+  const chevron = item.hasSubmenu ? (
+    <ChevronRight
+      className={cn(
+        "ml-auto h-4 w-4 shrink-0",
+        active ? "text-background/70" : "text-foreground/45",
+      )}
+      aria-hidden
+    />
+  ) : null;
+
+  const baseRow =
+    "flex w-full min-w-0 items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors";
 
   if (item.href === "#") {
     return (
-      <span className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted-foreground/70">
-        <Icon className="h-4 w-4 shrink-0 opacity-60" />
-        <span className="truncate">{item.label}</span>
+      <span
+        className={cn(
+          baseRow,
+          "cursor-default text-foreground/90",
+          "hover:bg-muted/50",
+          item.hasSubmenu && "pr-2",
+        )}
+      >
+        <Icon className="h-4 w-4 shrink-0 text-foreground/80" strokeWidth={1.75} />
+        <span className="min-w-0 flex-1 truncate">{item.label}</span>
+        {chevron}
       </span>
     );
   }
@@ -92,14 +156,17 @@ function AdminShellNavLink({
       href={item.href}
       onClick={onNavigate}
       className={cn(
-        "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-        active
-          ? "bg-primary text-primary-foreground shadow-sm"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+        baseRow,
+        item.hasSubmenu && "pr-2",
+        active ? "bg-foreground text-background shadow-sm" : "text-foreground/90 hover:bg-muted/50",
       )}
     >
-      <Icon className="h-4 w-4 shrink-0 opacity-90" />
-      <span className="truncate">{item.label}</span>
+      <Icon
+        className={cn("h-4 w-4 shrink-0", active ? "text-background" : "text-foreground/80")}
+        strokeWidth={1.75}
+      />
+      <span className="min-w-0 flex-1 truncate">{item.label}</span>
+      {chevron}
     </Link>
   );
 }
