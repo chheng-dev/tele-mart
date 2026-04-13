@@ -1,3 +1,6 @@
+import { auth, type UserRole } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { ActivityFeed, ActivityFeedSkeleton } from "./_components/activity-feed";
 import { BestSellingProductsPlaceholder } from "./_components/best-selling-products-placeholder";
@@ -7,7 +10,21 @@ import { SalesReportPlaceholder } from "./_components/sales-report-placeholder";
 import { StatsGrid } from "./_components/stats-grid";
 import { WeeklySalesPlaceholder } from "./_components/weekly-sales-placeholder";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const sessionData = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!sessionData) {
+    redirect("/login");
+  }
+
+  const role = sessionData.user.role as UserRole;
+
+  if (role !== "SUPER_ADMIN") {
+    redirect("/403");
+  }
+
   return (
     <div className="mx-auto max-w-[1600px] space-y-7 lg:space-y-8">
       <DashboardPageHeader />
