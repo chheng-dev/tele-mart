@@ -15,6 +15,20 @@
       "when": 1775621050955,
       "tag": "0001_flawless_namor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775622000000,
+      "tag": "0002_auth_subject_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1775623000000,
+      "tag": "0003_users_customers",
+      "breakpoints": true
     }
   ]
 }

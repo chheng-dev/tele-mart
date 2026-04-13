@@ -1,11 +1,11 @@
 import { integer, numeric, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
+import { customers } from "./customers";
 import { products } from "./products";
-import { users } from "./users";
 
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id")
-    .references(() => users.id, { onDelete: "cascade" })
+  customerId: integer("customer_id")
+    .references(() => customers.id, { onDelete: "cascade" })
     .notNull(),
   productId: integer("product_id")
     .references(() => products.id, { onDelete: "restrict" })
