@@ -1,6 +1,9 @@
+import { db } from "@/db";
 import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { Pool } from "pg";
+
+import * as authSchema from "@/db/schema/better-auth";
 
 export type UserRole = "SUPER_ADMIN" | "ADMIN" | "STAFF";
 
@@ -10,8 +13,9 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   basePath: "/api/auth",
 
-  database: new Pool({
-    connectionString: process.env.DATABASEcl_URL,
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema: authSchema,
   }),
 
   emailAndPassword: {

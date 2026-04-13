@@ -17,9 +17,11 @@ import { AdminShellNav } from "./admin-shell-nav";
 export function AdminShellSidebar({
   pathname,
   onNavigate,
+  onSignOut,
 }: {
   pathname: string;
   onNavigate?: () => void;
+  onSignOut?: () => void | Promise<void>;
 }) {
   return (
     <div className="flex h-full flex-col border-r border-border/80 bg-card shadow-[inset_-1px_0_0_0_hsl(var(--border)/0.35)]">
@@ -65,11 +67,13 @@ export function AdminShellSidebar({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive" className="gap-2" asChild>
-                <Link href="/" className="gap-2" onClick={onNavigate}>
-                  <LogOut className="size-4 opacity-80" />
-                  Sign out
-                </Link>
+              <DropdownMenuItem
+                variant="destructive"
+                className="gap-2"
+                onSelect={() => void onSignOut?.()}
+              >
+                <LogOut className="size-4 opacity-80" />
+                Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
