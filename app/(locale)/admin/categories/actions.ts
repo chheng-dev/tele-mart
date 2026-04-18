@@ -1,24 +1,11 @@
 "use server";
 
-/**
- * Model (server): validation, persistence, cache revalidation.
- * Client orchestration (TanStack Query, invalidation) lives in use-create-category-mutation.ts.
- */
-
 import { db } from "@/db";
 import { categories } from "@/db/schema/categories";
+import { isUniqueViolation } from "@/lib/api/db-errors";
 import { revalidatePath } from "next/cache";
 
 import { categoryFormSchema, type CategoryFormValues } from "./category-schema";
-
-function isUniqueViolation(err: unknown): boolean {
-  return (
-    typeof err === "object" &&
-    err !== null &&
-    "code" in err &&
-    (err as { code?: string }).code === "23505"
-  );
-}
 
 function normalizeDescription(description: string): string | null {
   const trimmed = description.trim();
