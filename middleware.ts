@@ -3,10 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const AUTH_SCREEN_PREFIXES = ["/login", "/signup", "/register"];
 const PUBLIC_API_PREFIXES = ["/api/telegram/webhook", "/api/auth"];
 const ALWAYS_SKIP_PREFIXES = ["/api", "/_next", "/_static"];
-const SESSION_COOKIE_NAMES = [
-  "better-auth.session_token", 
-  "__Secure-better-auth.session_token",
-];
+const SESSION_COOKIE_NAMES = ["better-auth.session_token", "__Secure-better-auth.session_token"];
 
 function hasPrefix(pathname: string, prefixes: readonly string[]) {
   return prefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
@@ -25,9 +22,7 @@ function unauthorizatedJson() {
 }
 
 function hasSessionCookie(request: NextRequest) {
-  return SESSION_COOKIE_NAMES.some(
-    (name) => !!request.cookies.get(name)?.value
-  );
+  return SESSION_COOKIE_NAMES.some((name) => !!request.cookies.get(name)?.value);
 }
 
 function redirectToLogin(request: NextRequest, pathname: string) {
@@ -52,7 +47,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const loggedIn = hasSessionCookie(request);
-  
+
   if (isAuthScreenPath(pathname)) {
     if (loggedIn) {
       return NextResponse.redirect(new URL("/", request.url));

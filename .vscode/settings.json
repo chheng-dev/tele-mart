@@ -1,3 +1,23 @@
 {
-  "github-actions.use-enterprise": false
+  "github-actions.use-enterprise": false,
+  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.colorCustomizations": {
+    "editorCursor.foreground": "#d5c69a"
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": ["keyword"],
+        "settings": {
+          "foreground": "#e6b7d9"
+        }
+      },
+      {
+        "scope": ["string"],
+        "settings": {
+          "foreground": "#c9d6a6"
+        }
+      }
+    ]
+  }
 }

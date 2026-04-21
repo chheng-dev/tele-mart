@@ -1,5 +1,7 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { categories } from "@/db/schema/categories";
 import { isUniqueViolation } from "@/lib/api/db-errors";
@@ -12,7 +14,7 @@ function normalizeDescription(description: string): string | null {
   return trimmed ? trimmed : null;
 }
 
-function toCreateFailure(err: unknown): CreateCategoryResult | null {
+function toCreateFailure(err: unknown): CreateCategoryResult | UpdateCategoryResult | null {
   if (isUniqueViolation(err)) {
     return {
       ok: false,
@@ -25,6 +27,13 @@ function toCreateFailure(err: unknown): CreateCategoryResult | null {
 }
 
 export type CreateCategoryResult =
+  | { ok: true }
+  | {
+      ok: false;
+      errors: { name?: string; root?: string };
+    };
+
+export type UpdateCategoryResult =
   | { ok: true }
   | {
       ok: false;
@@ -60,5 +69,45 @@ export async function createCategory(input: unknown): Promise<CreateCategoryResu
   }
 
   revalidatePath("/admin/categories");
+  return { ok: true };
+}
+
+export async function updateCategory(id: number, input: unknown): Promise<UpdateCategoryResult> {
+  const parsed = categoryFormSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      errors: { root: "Invalid form data." },
+    };
+  }
+
+  const data: CategoryFormValues = parsed.data;
+  const description = normalizeDescription(data.description);
+
+  try {
+    const updated = await db
+      .update(categories)
+      .set({
+        name: data.name,
+        description,
+      })
+      .where(eq(categories.id, id))
+      .returning();
+    if (!updated[0]) {
+      return { ok: false, errors: { root: "Category not found." } };
+    }
+  } catch (err) {
+    const handled = toCreateFailure(err);
+    if (handled) {
+      return handled;
+    }
+    return {
+      ok: false,
+      errors: { root: "Could not update category." },
+    };
+  }
+
+  revalidatePath("/admin/categories");
+  revalidatePath(`/admin/categories/${id}/edit`);
   return { ok: true };
 }
