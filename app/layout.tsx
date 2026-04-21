@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import type { ReactNode } from "react";
 import { SessionProvider } from "./components/auth/session-provider";
 import { QueryProvider } from "./components/providers/query-provider";
+import { ThemeProvider } from "./components/providers/theme-provider";
 import "./globals.css";
 
 export const metadata = {
@@ -10,10 +11,19 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <QueryProvider>
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </SessionProvider>
         </QueryProvider>
         <Toaster position="top-center" richColors closeButton />
       </body>

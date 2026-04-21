@@ -2,9 +2,12 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Bell, SunIcon, User } from "lucide-react";
+import { Bell, Moon, Sun, User } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export function AdminShellHeader() {
+  const { setTheme, theme } = useTheme();
+
   return (
     <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border/80 bg-background pl-12 pr-3 sm:gap-3 md:gap-4 md:px-6 md:pl-6">
       <div className="flex items-center justify-between w-full">
@@ -15,8 +18,14 @@ export function AdminShellHeader() {
         </div>
 
         <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
-          <Button variant="ghost" size="icon" className="relative shrink-0 cursor-pointer">
-            <SunIcon className="size-5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          >
+            <Sun className="size-5 dark:hidden" />
+            <Moon className="hidden h-5 w-5 dark:block" />
+            <span className="sr-only">Toggle theme</span>
           </Button>
           <Button variant="ghost" size="icon" className="relative shrink-0 cursor-pointer">
             <Bell className="size-5" />
