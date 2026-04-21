@@ -1,21 +1,49 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Tag } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AlertCircle, Tag } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
+import { createCategory, updateCategory } from "./actions";
 import { categoryFormSchema, type CategoryFormValues } from "./category-schema";
-import { useCreateCategoryMutation } from "./use-create-category-mutation";
+import { categoryKeys } from "./query-keys";
 
-export function CategoryForm() {
+export type CategoryFormProps = {
+  mode?: "create" | "edit";
+  categoryId?: number;
+  defaultValues?: Partial<CategoryFormValues>;
+};
+
+export function CategoryForm({ mode = "create", categoryId, defaultValues }: CategoryFormProps) {
   const [rootMessage, setRootMessage] = useState<string | null>(null);
-  const createCategoryMutation = useCreateCategoryMutation();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const saveMutation = useMutation({
+    mutationFn: async (data: CategoryFormValues) => {
+      if (mode === "edit" && categoryId != null) {
+        return updateCategory(categoryId, data);
+      }
+      return createCategory(data);
+    },
+    onSuccess: (result) => {
+      if (!result.ok) {
+        return;
+      }
+      void queryClient.invalidateQueries({ queryKey: categoryKeys.all });
+      router.push("/admin/categories");
+    },
+  });
 
   const {
     register,
@@ -25,14 +53,14 @@ export function CategoryForm() {
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryFormSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      name: defaultValues?.name ?? "",
+      description: defaultValues?.description ?? "",
     },
   });
 
   async function onSubmit(data: CategoryFormValues) {
     setRootMessage(null);
-    const result = await createCategoryMutation.mutateAsync(data);
+    const result = await saveMutation.mutateAsync(data);
     if (!result.ok) {
       if (result.errors.name) {
         setError("name", { message: result.errors.name });
@@ -43,10 +71,18 @@ export function CategoryForm() {
     }
   }
 
-  const isPending = createCategoryMutation.isPending;
+  const isPending = saveMutation.isPending;
+  const submitLabel =
+    mode === "edit"
+      ? isPending
+        ? "Saving…"
+        : "Save changes"
+      : isPending
+        ? "Creating…"
+        : "Create category";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
       <div className="space-y-2">
         <Label htmlFor="category-name" className="gap-1 text-sm font-medium">
           Category name <span className="text-destructive">*</span>
@@ -76,17 +112,16 @@ export function CategoryForm() {
         <Label htmlFor="category-description" className="text-sm font-medium">
           Description
         </Label>
-        <textarea
+        <Textarea
           id="category-description"
           placeholder="Optional description"
           rows={4}
-          className={cn(
-            "border-input bg-transparent placeholder:text-muted-foreground flex w-full min-w-0 rounded-lg border px-2.5 py-2 text-base transition-colors outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
-            "min-h-[88px] resize-y",
-          )}
           aria-invalid={errors.description ? true : undefined}
           {...register("description")}
         />
+        <p className="text-xs text-muted-foreground">
+          Shown in the catalog where space allows. Leave blank if you only need a short label.
+        </p>
         {errors.description?.message ? (
           <p className="text-destructive text-sm" role="alert">
             {errors.description.message}
@@ -95,14 +130,19 @@ export function CategoryForm() {
       </div>
 
       {rootMessage ? (
-        <p className="text-destructive text-sm" role="alert">
-          {rootMessage}
-        </p>
+        <Alert variant="destructive">
+          <AlertCircle />
+          <AlertTitle>Could not save</AlertTitle>
+          <AlertDescription>{rootMessage}</AlertDescription>
+        </Alert>
       ) : null}
 
       <div className="flex flex-wrap gap-3">
         <Button type="submit" disabled={isPending}>
-          {isPending ? "Creating…" : "Create category"}
+          {submitLabel}
+        </Button>
+        <Button type="button" variant="outline" asChild>
+          <Link href="/admin/categories">Cancel</Link>
         </Button>
       </div>
     </form>

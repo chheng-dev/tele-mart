@@ -1,5 +1,5 @@
 import { FormPage } from "@/app/components/layout/form-page";
-import { Button } from "@/components/ui/button";
+
 import { CategoryForm } from "../form";
 
 export default function NewCategoryPage() {
@@ -7,11 +7,8 @@ export default function NewCategoryPage() {
     <FormPage
       title="Create Category"
       description="Fill in the details below to add a new category."
-      actions={
-        <Button variant="outline" asChild>
-          <a href="/admin/categories">Cancel</a>
-        </Button>
-      }
+      backHref="/admin/categories"
+      breadcrumbs={[{ label: "Categories", href: "/admin/categories" }, { label: "New" }]}
       form={<CategoryForm />}
     />
   );

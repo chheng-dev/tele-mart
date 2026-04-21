@@ -11,6 +11,7 @@ interface DashboardShellProps {
   children: React.ReactNode;
 }
 
+/** Admin chrome (sidebar + top bar). Page bodies should use `PageLayout` / `FormPage` in the main slot — no paid block registry required. */
 export function DashboardShell({ children }: DashboardShellProps) {
   const pathname = usePathname();
   const router = useRouter();

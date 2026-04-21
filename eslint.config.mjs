@@ -42,6 +42,18 @@ export default tseslint.config(
     },
     rules: {
       "prettier/prettier": "error",
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@shadcn-space/*"],
+              message:
+                "Licensed Shadcn Space blocks are not used in this project; use open-source shadcn/ui (npx shadcn@latest add …) and app layout components (PageLayout, FormPage, DashboardShell).",
+            },
+          ],
+        },
+      ],
     },
   },
 );

@@ -7,8 +7,8 @@
     "config": "",
     "css": "app/globals.css",
     "baseColor": "neutral",
-    "cssVariables": true,
-    "prefix": ""
+    "prefix": "",
+    "cssVariables": true
   },
   "iconLibrary": "lucide",
   "aliases": {
@@ -17,5 +17,8 @@
     "ui": "@/components/ui",
     "lib": "@/lib",
     "hooks": "@/hooks"
+  },
+  "registries": {
+    "@acme": "https://acme.com/r/{name}.json"
   }
 }
